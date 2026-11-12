@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReWear | Sustainable Fashion</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f8f7f3;
+            text-align: center;
+        }
+
+        header {
+            background: #263c32;
+            color: white;
+            padding: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 100px 20px;
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #263c32;
+        }
+
+        p {
+            font-size: 19px;
+            color: #666;
+        }
+
+        button {
+            background: #263c32;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main>
+    <h1>Fashion Deserves a Second Life.</h1>
+
+    <p>
+        Buy and sell pre-loved fashion.
+        Discover your next favourite outfit.
+    </p>
+
+    <button>Explore Collection</button>
+</main>
+
+</body>
+</html>

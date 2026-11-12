@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Details - ReWear</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .container {
+            width: 85%;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .product {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+        .product img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 18px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+
+    <h1>Order Details</h1>
+
+    <div class="card">
+
+        <h2 th:text="'Order #' + ${order.id}"></h2>
+
+        <p>
+            Customer:
+            <span th:text="${order.customerName}"></span>
+        </p>
+
+        <p>
+            Email:
+            <span th:text="${order.email}"></span>
+        </p>
+
+        <p>
+            Phone:
+            <span th:text="${order.phone}"></span>
+        </p>
+
+        <p>
+            Address:
+            <span th:text="${order.address}"></span>
+        </p>
+
+        <p>
+            Status:
+            <strong th:text="${order.status}"></strong>
+        </p>
+
+        <p>
+            Order Date:
+            <span th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}"></span>
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Purchased Products</h2>
+
+        <div th:each="item : ${items}" class="product">
+
+            <div>
+                <img th:src="${item.product.imageUrl}"
+                     th:alt="${item.product.name}">
+
+            </div>
+
+            <div>
+                <h3 th:text="${item.product.name}"></h3>
+
+                <p>
+                    Quantity:
+                    <span th:text="${item.quantity}"></span>
+                </p>
+
+                <p>
+                    Unit Price:
+                    ₹<span th:text="${item.price}"></span>
+                </p>
+            </div>
+
+            <div>
+                <strong>
+                    <span th:text="${item.subtotal}"></span>
+                </strong>
+            </div>
+
+        </div>
+
+        <h2>
+            Total: ₹<span th:text="${order.totalAmount}"></span>
+        </h2>
+
+    </div>
+
+    <a th:href="@{/orders}" class="back-btn">
+        ← Back to Order History
+    </a>
+
+</div>
+
+</body>
+</html>

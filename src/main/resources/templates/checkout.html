@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout | REWEAR</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 22px 8%;
+            font-size: 25px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        input, textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px;
+            margin: 9px 0 18px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        .total {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 25px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+
+    <h1>Checkout</h1>
+    <p>Please enter your delivery details.</p>
+
+    <form th:action="@{/checkout/place-order}" method="post">
+
+        <label>Full Name</label>
+        <input type="text" name="customerName"
+               placeholder="Enter your full name" required>
+
+        <label>Email Address</label>
+        <input type="email" name="email"
+               placeholder="Enter your email" required>
+
+        <label>Phone Number</label>
+        <input type="tel" name="phone"
+               placeholder="Enter your phone number"
+               pattern="[0-9]{10}" maxlength="10" required>
+
+        <label>Delivery Address</label>
+        <textarea name="address" rows="4"
+                  placeholder="Enter your complete address"
+                  required></textarea>
+
+        <div class="total">
+            Total Amount: ₹<span th:text="${cartTotal}"></span>
+        </div>
+
+        <button type="submit">Place Order</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

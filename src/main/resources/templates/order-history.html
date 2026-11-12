@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order History - ReWear</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .container {
+            width: 85%;
+            margin: 40px auto;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .order-card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #00000012;
+        }
+
+        .order-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .status {
+            color: green;
+            font-weight: bold;
+        }
+
+        .details-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 18px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .empty {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+
+    <h1>My Order History</h1>
+
+    <div th:if="${#lists.isEmpty(orders)}" class="empty">
+        <h2>No orders yet!</h2>
+        <p>Your previous purchases will appear here.</p>
+        <a th:href="@{/products}" class="details-btn">
+            Explore Products
+        </a>
+    </div>
+
+    <div th:each="order : ${orders}" class="order-card">
+
+        <div class="order-info">
+
+            <div>
+                <h3 th:text="'Order #' + ${order.id}"></h3>
+
+                <p>
+                    Customer:
+                    <span th:text="${order.customerName}"></span>
+                </p>
+
+                <p>
+                    Date:
+                    <span th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}"></span>
+                </p>
+            </div>
+
+            <div>
+                <h3>
+                    ₹<span th:text="${order.totalAmount}"></span>
+                </h3>
+
+                <p class="status"
+                   th:text="${order.status}">
+                </p>
+            </div>
+
+        </div>
+
+        <a th:href="@{/orders/{id}(id=${order.id})}"
+           class="details-btn">
+            View Order Details →
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

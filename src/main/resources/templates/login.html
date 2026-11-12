@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login - ReWear</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef3ef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .box {
+            background: white;
+            padding: 35px;
+            width: 350px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px #0002;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #234b38;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        a { color: #234b38; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h1>Welcome Back</h1>
+    <p>Login to your ReWear account.</p>
+
+    <p class="error" th:if="${param.error}">
+        Invalid email or password.
+    </p>
+
+    <p class="success" th:if="${param.registered}">
+        Registration successful! Please login.
+    </p>
+
+    <p class="success" th:if="${param.logout}">
+        You have logged out successfully.
+    </p>
+
+    <form th:action="@{/login}" method="post">
+
+        <input type="email" name="email"
+               placeholder="Email Address" required>
+
+        <input type="password" name="password"
+               placeholder="Password" required>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <p>New to ReWear?
+        <a th:href="@{/register}">Create Account</a>
+    </p>
+</div>
+
+</body>
+</html>

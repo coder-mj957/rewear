@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmed | REWEAR</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+            text-align: center;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 22px;
+            font-size: 25px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .confirmation {
+            max-width: 600px;
+            margin: 70px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .success {
+            font-size: 60px;
+        }
+
+        .details {
+            text-align: left;
+            background: #f7f7f7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            line-height: 1.8;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 13px 25px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="confirmation">
+
+    <div class="success">✓</div>
+
+    <h1>Order Placed Successfully!</h1>
+
+    <p>Thank you for shopping with ReWear.</p>
+
+    <div class="details">
+
+        <p>
+            <strong>Order ID:</strong>
+            <span th:text="${order.id}"></span>
+        </p>
+
+        <p>
+            <strong>Customer:</strong>
+            <span th:text="${order.customerName}"></span>
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            <span th:text="${order.email}"></span>
+        </p>
+
+        <p>
+            <strong>Delivery Address:</strong>
+            <span th:text="${order.address}"></span>
+        </p>
+
+        <p>
+            <strong>Total Paid:</strong>
+            ₹<span th:text="${order.totalAmount}"></span>
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+            <span th:text="${order.status}"></span>
+        </p>
+
+    </div>
+
+    <a th:href="@{/products}">Continue Shopping</a>
+
+</div>
+
+</body>
+</html>

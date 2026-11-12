@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping Cart | REWEAR</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 22px 8%;
+            font-size: 25px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            background: white;
+            padding: 20px;
+            margin-bottom: 18px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .cart-item img {
+            width: 120px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-details h3 {
+            margin-top: 0;
+        }
+
+        .price {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .remove-btn {
+            background: #fff0f0;
+            color: #d32f2f;
+            border: 1px solid #ffcaca;
+            padding: 10px 16px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .empty-cart {
+            background: white;
+            padding: 45px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .continue-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: #222;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 7px;
+            text-decoration: none;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #555;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .cart-item {
+                flex-wrap: wrap;
+            }
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .quantity-control form {
+            margin: 0;
+        }
+
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #ddd;
+            background: #f5f5f5;
+            border-radius: 6px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .quantity-btn:hover {
+            background: #222;
+            color: white;
+        }
+
+        .quantity-number {
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /*--------------------------------------------*/
+        .cart-total {
+            background: white;
+            padding: 25px;
+            margin-top: 25px;
+            border-radius: 12px;
+            text-align: right;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .cart-total h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .checkout-btn {
+            background: #222;
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .checkout-btn:hover {
+            background: #444;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+
+    <a class="back-link" th:href="@{/products}">
+        ← Continue Shopping
+    </a>
+
+    <h1>My Shopping Cart</h1>
+
+    <div th:if="${#lists.isEmpty(cartItems)}"
+         class="empty-cart">
+
+        <h2>Your cart is empty!</h2>
+        <p>Looks like you haven't added anything yet.</p>
+
+        <a class="continue-btn" th:href="@{/products}">
+            Explore Products
+        </a>
+
+    </div>
+
+    <div th:unless="${#lists.isEmpty(cartItems)}">
+
+        <div class="cart-item" th:each="item : ${cartItems}">
+
+            <img th:src="${item.product.imageUrl}"
+                 th:alt="${item.product.name}">
+
+            <div class="item-details">
+
+                <h3 th:text="${item.product.name}"></h3>
+
+                <p th:text="${item.product.description}"></p>
+
+                <p>
+                    Size:
+                    <span th:text="${item.product.size}"></span>
+                </p>
+
+                <p class="price">
+                    ₹<span th:text="${item.product.price}"></span>
+                </p>
+
+                <div class="quantity-control">
+
+                    <span>Quantity:</span>
+
+                    <form th:action="@{/cart/decrease/{id}(id=${item.id})}"
+                          method="post">
+                        <button type="submit" class="quantity-btn">−</button>
+                    </form>
+
+                    <span class="quantity-number"
+                          th:text="${item.quantity}"></span>
+
+                    <form th:action="@{/cart/increase/{id}(id=${item.id})}"
+                          method="post">
+                        <button type="submit" class="quantity-btn">+</button>
+                    </form>
+
+                </div>
+
+            </div>
+
+            <form th:action="@{/cart/remove/{id}(id=${item.id})}"
+                  method="post">
+
+                <button class="remove-btn" type="submit">
+                    Remove
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    /*------------------------------------*/
+    <div class="cart-total"
+         th:unless="${#lists.isEmpty(cartItems)}">
+
+        <h2>
+            Grand Total:
+            ₹<span th:text="${cartTotal}"></span>
+        </h2>
+
+        <a th:href="@{/checkout}" class="checkout-btn">
+            Proceed to Checkout →
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

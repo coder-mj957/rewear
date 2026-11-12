@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register - ReWear</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef3ef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .box {
+            background: white;
+            padding: 35px;
+            width: 350px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px #0002;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #234b38;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        a { color: #234b38; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h1>Join ReWear</h1>
+    <p>Create your customer account.</p>
+
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <form th:action="@{/register}" method="post">
+
+        <input type="text" name="name"
+               placeholder="Full Name" required>
+
+        <input type="email" name="email"
+               placeholder="Email Address" required>
+
+        <input type="password" name="password"
+               placeholder="Password (minimum 8 characters)"
+               minlength="8" required>
+
+        <button type="submit">Create Account</button>
+    </form>
+
+    <p>Already registered?
+        <a th:href="@{/login}">Login here</a>
+    </p>
+</div>
+
+</body>
+</html>

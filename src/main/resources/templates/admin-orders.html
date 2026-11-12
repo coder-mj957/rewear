@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manage Orders</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f4;
+            margin: 0;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #234b38;
+            margin-bottom: 25px;
+        }
+
+        .order-card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 18px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #00000012;
+        }
+
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .label {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .value {
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        select, button {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background: #234b38;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background: #183526;
+        }
+
+        a {
+            color: #234b38;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .status-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .empty {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+
+    <h1>Admin Dashboard - Manage Orders</h1>
+
+    <div th:if="${#lists.isEmpty(orders)}" class="empty">
+        <h3>No orders have been placed yet.</h3>
+    </div>
+
+    <div th:each="order : ${orders}" class="order-card">
+
+        <div class="order-info">
+
+            <div>
+                <div class="label">Order ID</div>
+                <div class="value" th:text="${order.id}"></div>
+            </div>
+
+            <div>
+                <div class="label">Customer</div>
+                <div class="value" th:text="${order.customerName}"></div>
+            </div>
+
+            <div>
+                <div class="label">Order Date</div>
+                <div class="value"
+                     th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}">
+                </div>
+            </div>
+
+            <div>
+                <div class="label">Total Amount</div>
+                <div class="value">
+                    ₹<span th:text="${order.totalAmount}"></span>
+                </div>
+            </div>
+
+            <div>
+                <div class="label">Current Status</div>
+                <div class="value" th:text="${order.status}"></div>
+            </div>
+
+        </div>
+
+        <a th:href="@{/orders/{id}(id=${order.id})}">
+            View Order Details →
+        </a>
+
+        <form class="status-form"
+              th:action="@{/admin/orders/{id}/status(id=${order.id})}"
+              method="post">
+
+            <select name="status">
+                <option th:each="status : ${statuses}"
+                        th:value="${status}"
+                        th:text="${status}"
+                        th:selected="${status == order.status}">
+                </option>
+            </select>
+
+            <button type="submit">Update Status</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
