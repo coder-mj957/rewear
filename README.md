@@ -26,7 +26,7 @@ ReWear is a web-based second-hand clothing marketplace built using **Java, Sprin
 
 1. Clone this repository:
    ```bash
-   git clone YOUR_REPOSITORY_URL
+  [ git clone YOUR_REPOSITORY_URL](https://github.com/coder-mj957/rewear.git)
    ```
 2. Open the project in IntelliJ IDEA.
 3. Create a MySQL database named `rewear_db`.
