@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<div th:fragment="footer">
+    <footer class="rw-footer">
+        <div class="rw-container">
+            <div class="rw-footer-grid">
+                <div>
+                    <div class="rw-footer-brand-title">REWEAR.</div>
+                    <p class="rw-footer-desc">
+                        Curating a conscious fashion marketplace where quality clothes find a second life. Reducing textile waste, one outfit at a time.
+                    </p>
+                    <div class="rw-footer-pill">
+                        🌱 100% Circular Fashion Initiative
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="rw-footer-heading">Explore</h4>
+                    <ul class="rw-footer-links">
+                        <li><a th:href="@{/}">Home</a></li>
+                        <li><a th:href="@{/products}">Browse All Products</a></li>
+                        <li><a th:href="@{/products(category='Women')}">Women's Collection</a></li>
+                        <li><a th:href="@{/products(category='Men')}">Men's Collection</a></li>
+                        <li><a th:href="@{/products(category='Accessories')}">Accessories</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="rw-footer-heading">Account</h4>
+                    <ul class="rw-footer-links">
+                        <li sec:authorize="isAuthenticated()">
+                            <a th:href="@{/orders}">My Orders</a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()">
+                            <a th:href="@{/cart}">Shopping Cart</a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()">
+                            <a th:href="@{/products/new}">Sell a Garment</a>
+                        </li>
+                        <li sec:authorize="isAnonymous()">
+                            <a th:href="@{/login}">Customer Login</a>
+                        </li>
+                        <li sec:authorize="isAnonymous()">
+                            <a th:href="@{/register}">Create Account</a>
+                        </li>
+                        <li sec:authorize="hasRole('ADMIN')">
+                            <a th:href="@{/admin/orders}">Admin Dashboard</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="rw-footer-heading">Community Promise</h4>
+                    <p class="rw-footer-desc" style="font-size: 13.5px; margin-bottom: 12px;">
+                        Every piece listed is verified for condition accuracy. Buy pre-loved with confidence and lower your carbon wardrobe footprint.
+                    </p>
+                    <span style="display: inline-block; font-size: 12px; color: #a4beaf;">
+                        🔒 Verified Buyers & Sellers • Direct ReWear Checkout
+                    </span>
+                </div>
+            </div>
+
+            <div class="rw-footer-bottom">
+                <div>&copy; 2026 ReWear Inc. All rights reserved. Fashion with a second life.</div>
+                <div>Designed for sustainability, durability & style.</div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>
