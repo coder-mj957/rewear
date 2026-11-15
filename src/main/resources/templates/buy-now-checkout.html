@@ -1,118 +1,78 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>ReWear | Buy Now Checkout</title>
-
+    <title>Instant Checkout | ReWear</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('rewear-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        * {
-            box-sizing: border-box;
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1.6fr 1.1fr;
+            gap: 40px;
+            align-items: start;
+            margin-top: 24px;
         }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f6f2;
-            color: #263c32;
+        @media (max-width: 860px) {
+            .checkout-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .container {
-            max-width: 850px;
-            margin: 45px auto;
-            padding: 20px;
+        .checkout-panel {
+            background: #ffffff;
+            border: 1px solid var(--surface-border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 36px;
+            box-shadow: var(--shadow-sm);
         }
 
-        .checkout-card {
-            background: white;
-            padding: 30px;
-            border-radius: 14px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.07);
-        }
-
-        h1 {
-            margin-top: 0;
-        }
-
-        .product-summary {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            padding: 18px;
-            background: #f5f6f2;
-            border-radius: 10px;
-            margin-bottom: 25px;
-        }
-
-        .product-summary img {
-            width: 110px;
-            height: 110px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .product-price {
-            color: #286044;
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        label {
-            display: block;
-            margin: 17px 0 7px;
-            font-weight: 600;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d3d9d3;
-            border-radius: 7px;
-            font-size: 15px;
-        }
-
-        textarea {
-            min-height: 90px;
-            resize: vertical;
-        }
-
-        .place-order {
-            width: 100%;
-            margin-top: 25px;
-            padding: 15px;
-            background: #263c32;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .place-order:hover {
-            background: #37634e;
-        }
-
-        .back-link {
-            display: inline-block;
+        .checkout-section-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-900);
             margin-bottom: 20px;
-            color: #286044;
-            text-decoration: none;
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        @media(max-width: 550px) {
-            .product-summary {
-                align-items: flex-start;
-            }
+        .summary-card-checkout {
+            background: #fbfaf7;
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-xl);
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 100px;
+        }
 
-            .product-summary img {
-                width: 85px;
-                height: 85px;
-            }
+        .buy-now-product-preview {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+        }
+
+        .buy-now-thumb {
+            width: 80px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            background: #eeebe3;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -121,71 +81,141 @@
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container">
+<div class="rw-page-wrap">
+    <main class="rw-container rw-section">
 
-    <a class="back-link" th:href="@{/products}">
-        ← Continue Shopping
-    </a>
+        <a class="btn btn-secondary btn-sm"
+           th:href="@{/products/{id}(id=${product.id})}"
+           style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;">
+            ← Back to Product
+        </a>
 
-    <div class="checkout-card">
-
-        <h1>Buy Now Checkout</h1>
-        <p>Complete your details to place your order.</p>
-
-        <div class="product-summary">
-
-            <img th:src="${product.imageUrl}"
-                 th:alt="${product.name}">
-
-            <div>
-                <h3 th:text="${product.name}"></h3>
-
-                <p>
-                    Quantity: 1
-                </p>
-
-                <p class="product-price">
-                    ₹<span th:text="${product.price}"></span>
-                </p>
-            </div>
-
+        <div style="margin-bottom: 28px;">
+            <span style="font-size: 12px; font-weight: 700; color: var(--accent-terracotta); letter-spacing: 2px; text-transform: uppercase;">
+                Express Checkout
+            </span>
+            <h1 style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--primary-900);">
+                Instant Buy Checkout
+            </h1>
+            <p style="font-size: 15px; color: var(--text-secondary);">
+                Directly purchase this one-of-a-kind pre-loved item.
+            </p>
         </div>
 
-        <form th:action="@{/checkout/buy-now/{id}(id=${product.id})}"
-              method="post">
+        <form th:action="@{/checkout/buy-now/{id}(id=${product.id})}" method="post">
 
-            <label>Full Name</label>
-            <input type="text"
-                   name="customerName"
-                   placeholder="Enter your full name"
-                   required>
+            <div class="checkout-layout">
 
-            <label>Email Address</label>
-            <input type="email"
-                   name="email"
-                   placeholder="Enter your email"
-                   required>
+                <!-- Left Column: Delivery Form -->
+                <div class="checkout-panel">
+                    <h2 class="checkout-section-title">
+                        📍 Delivery Address &amp; Contact
+                    </h2>
 
-            <label>Phone Number</label>
-            <input type="tel"
-                   name="phone"
-                   placeholder="Enter your phone number"
-                   required>
+                    <div class="form-group">
+                        <label class="form-label">Full Recipient Name *</label>
+                        <input type="text"
+                               class="form-control"
+                               name="customerName"
+                               placeholder="e.g. Eleanor Vance"
+                               required>
+                    </div>
 
-            <label>Delivery Address</label>
-            <textarea name="address"
-                      placeholder="Enter your complete delivery address"
-                      required></textarea>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email"
+                                   class="form-control"
+                                   name="email"
+                                   placeholder="name@example.com"
+                                   required>
+                        </div>
 
-            <button type="submit" class="place-order">
-                Place Order
-            </button>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel"
+                                   class="form-control"
+                                   name="phone"
+                                   placeholder="e.g. 9876543210"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Full Delivery Address *</label>
+                        <textarea class="form-control"
+                                  name="address"
+                                  rows="4"
+                                  placeholder="Apartment/Flat, Street name, Landmark, City, State, PIN Code"
+                                  required></textarea>
+                    </div>
+
+                    <div style="margin-top: 18px; padding: 14px; background: var(--surface-subtle); border-radius: var(--radius-md); font-size: 13px; color: var(--text-secondary); display: flex; gap: 10px; align-items: center;">
+                        <span>📦</span>
+                        <span>Zero waste packaging and carbon-compensated shipping on every order.</span>
+                    </div>
+                </div>
+
+                <!-- Right Column: Product Preview & Instant Order Summary -->
+                <div class="summary-card-checkout">
+                    <h3 style="font-family: var(--font-heading); font-size: 19px; font-weight: 800; color: var(--primary-900); margin-bottom: 18px;">
+                        Selected Garment
+                    </h3>
+
+                    <div class="buy-now-product-preview">
+                        <img class="buy-now-thumb"
+                             th:src="${product.imageUrl != null and !product.imageUrl.isEmpty() ? product.imageUrl : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=400&q=80'}"
+                             th:alt="${product.name}"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=400&q=80';">
+
+                        <div>
+                            <h4 style="font-family: var(--font-heading); font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;"
+                                th:text="${product.name}"></h4>
+                            <div style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 6px;">
+                                Size: <strong th:text="${product.size}"></strong> • Qty: 1
+                            </div>
+                            <div style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; color: var(--primary-800);">
+                                ₹<span th:text="${product.price}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14.5px; color: var(--text-secondary);">
+                        <span>Item Subtotal</span>
+                        <span style="font-weight: 600;">₹<span th:text="${product.price}"></span></span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14.5px; color: var(--text-secondary);">
+                        <span>Eco Delivery</span>
+                        <span style="color: var(--status-success); font-weight: 700;">FREE</span>
+                    </div>
+
+                    <div style="border-top: 2px dashed var(--surface-border); padding-top: 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: baseline;">
+                        <span style="font-size: 17px; font-weight: 700; color: var(--primary-900);">Total to Pay</span>
+                        <span style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: var(--primary-900);">
+                            ₹<span th:text="${product.price}"></span>
+                        </span>
+                    </div>
+
+                    <div style="margin-top: 26px;">
+                        <button type="submit" class="btn btn-accent btn-lg btn-block">
+                            ⚡ Place Instant Order
+                        </button>
+                    </div>
+
+                    <div style="margin-top: 18px; font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.5;">
+                        🔒 Immediate order reservation. Guaranteed authentic pre-loved garment.
+                    </div>
+                </div>
+
+            </div>
 
         </form>
 
-    </div>
-
+    </main>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

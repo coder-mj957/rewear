@@ -1,118 +1,156 @@
-
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>ReWear | Product Details</title>
-
+    <title th:text="${product.name + ' | ReWear'}">ReWear | Product Details</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('rewear-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        * {
-            box-sizing: border-box;
+        .product-detail-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 50px;
+            align-items: start;
+            margin-top: 24px;
         }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f8f7f3;
-            color: #263c32;
+        @media (max-width: 860px) {
+            .product-detail-layout {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
         }
 
-        header {
-            background: #263c32;
-            color: white;
-            padding: 22px 7%;
-            font-size: 27px;
-            font-weight: bold;
+        .gallery-container {
+            background: #ffffff;
+            border: 1px solid var(--surface-border-subtle);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 100px;
         }
 
-        .container {
-            max-width: 1050px;
-            margin: 50px auto;
-            padding: 20px;
+        .gallery-main-img {
+            width: 100%;
+            height: 520px;
+            object-fit: cover;
+            display: block;
+            background: #f0ede6;
         }
 
-        .product-details {
+        @media (max-width: 600px) {
+            .gallery-main-img {
+                height: 360px;
+            }
+        }
+
+        .product-info-panel {
+            background: #ffffff;
+            border: 1px solid var(--surface-border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 36px 32px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .detail-meta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-terracotta);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+
+        .detail-title {
+            font-family: var(--font-heading);
+            font-size: clamp(26px, 3.5vw, 36px);
+            font-weight: 800;
+            color: var(--primary-900);
+            line-height: 1.25;
+            margin-bottom: 14px;
+        }
+
+        .detail-price-box {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            padding: 16px 0;
+            border-top: 1px solid var(--surface-border-subtle);
+            border-bottom: 1px solid var(--surface-border-subtle);
+            margin: 20px 0;
+        }
+
+        .detail-price {
+            font-family: var(--font-heading);
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--primary-800);
+        }
+
+        .detail-price-note {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .specs-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 45px;
-            background: white;
-            padding: 30px;
-            border-radius: 14px;
+            gap: 16px;
+            margin: 24px 0;
+            background: var(--surface-subtle);
+            padding: 18px;
+            border-radius: var(--radius-md);
         }
 
-        .product-image {
-            width: 100%;
-            height: 430px;
-            object-fit: cover;
-            border-radius: 10px;
+        .spec-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
-        h1 {
-            font-size: 32px;
-        }
-
-        .price {
-            font-size: 30px;
-            font-weight: bold;
-            color: #286044;
-        }
-
-        .condition {
-            display: inline-block;
-            background: #e4f0e7;
-            padding: 8px 14px;
-            border-radius: 20px;
-        }
-
-        .buy-button {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 15px 35px;
-            background: #263c32;
-            color: white;
-            border-radius: 6px;
-            text-decoration: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #286044;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        @media(max-width: 700px) {
-            .product-details {
-                grid-template-columns: 1fr;
-            }
-
-            .product-image {
-                height: 300px;
-            }
-        }
-        .add-cart-btn {
-            background: #222;
-            color: white;
-            padding: 14px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
+        .spec-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
             font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: 0.3s;
+            letter-spacing: 0.5px;
         }
 
-        .add-cart-btn:hover {
-            background: #444;
-            transform: translateY(-2px);
+        .spec-val {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .action-buttons-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .eco-guarantee {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid var(--surface-border-subtle);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -121,64 +159,118 @@
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container">
+<div class="rw-page-wrap">
+    <main class="rw-container rw-section">
 
-    <a class="back-link" href="/products">
-        ← Back to Products
-    </a>
+        <!-- Back Link Navigation -->
+        <a class="btn btn-secondary btn-sm"
+           th:href="@{/products}"
+           style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;">
+            ← Back to Products
+        </a>
 
-    <div class="product-details">
+        <div class="product-detail-layout">
 
-        <div>
-            <img class="product-image"
-                 th:src="${product.imageUrl}"
-                 th:alt="${product.name}">
+            <!-- Product Visual Gallery -->
+            <div class="gallery-container">
+                <img class="gallery-main-img"
+                     th:src="${product.imageUrl != null and !product.imageUrl.isEmpty() ? product.imageUrl : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80'}"
+                     th:alt="${product.name}"
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80';">
+            </div>
+
+            <!-- Product Purchase Info -->
+            <div class="product-info-panel">
+
+                <div class="detail-meta-pill">
+                    <span th:text="${product.category}">Category</span> • Pre-Loved Garment
+                </div>
+
+                <h1 class="detail-title" th:text="${product.name}"></h1>
+
+                <div class="detail-price-box">
+                    <div class="detail-price">
+                        ₹<span th:text="${product.price}"></span>
+                    </div>
+                    <span class="detail-price-note">Taxes &amp; seller verification included</span>
+                </div>
+
+                <!-- Product Description -->
+                <div style="margin-bottom: 22px;">
+                    <h4 style="font-size: 14px; font-weight: 700; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+                        Garment Description
+                    </h4>
+                    <p style="font-size: 15px; color: var(--text-secondary); line-height: 1.6;" th:text="${product.description}"></p>
+                </div>
+
+                <!-- Garment Specs -->
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <span class="spec-label">Size</span>
+                        <span class="spec-val" th:text="${product.size}"></span>
+                    </div>
+
+                    <div class="spec-item">
+                        <span class="spec-label">Category</span>
+                        <span class="spec-val" th:text="${product.category}"></span>
+                    </div>
+
+                    <div class="spec-item" style="grid-column: span 2;">
+                        <span class="spec-label">Garment Condition</span>
+                        <div style="margin-top: 4px;">
+                            <span class="badge"
+                                  th:classappend="${product.condition == T(Rewear.Product.Condition).NEW_WITH_TAGS ? 'badge-condition-new' : (product.condition == T(Rewear.Product.Condition).LIKE_NEW ? 'badge-condition-like-new' : (product.condition == T(Rewear.Product.Condition).GOOD ? 'badge-condition-good' : 'badge-condition-fair'))}"
+                                  th:text="${product.condition}">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Purchase Actions -->
+                <div class="action-buttons-group">
+
+                    <!-- Direct Instant Buy Now -->
+                    <a class="btn btn-accent btn-lg btn-block"
+                       th:href="@{/checkout/buy-now/{id}(id=${product.id})}">
+                        ⚡ Instant Buy Now
+                    </a>
+
+                    <!-- Add to Cart Form -->
+                    <form th:action="@{/cart/add/{productId}(productId=${product.id})}"
+                          method="post"
+                          style="margin: 0;">
+
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">
+                            🛒 Add to Shopping Cart
+                        </button>
+
+                    </form>
+
+                    <!-- Edit button if permitted -->
+                    <a th:if="${canManageProduct}"
+                       th:href="@{/products/edit/{id}(id=${product.id})}"
+                       class="btn btn-secondary btn-block">
+                        ✏️ Edit Your Garment Details
+                    </a>
+
+                </div>
+
+                <!-- Sustainable Impact Guarantee -->
+                <div class="eco-guarantee">
+                    <span style="font-size: 22px;">🌱</span>
+                    <div>
+                        <strong>Circular Choice:</strong> By acquiring this pre-loved piece instead of fast fashion, you conserve roughly 2,700 liters of water and divert wearable fashion from landfill.
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
-        <div>
-
-            <h1 th:text="${product.name}"></h1>
-
-            <p class="price">
-                ₹<span th:text="${product.price}"></span>
-            </p>
-
-            <p th:text="${product.description}"></p>
-
-            <p>
-                <strong>Size:</strong>
-                <span th:text="${product.size}"></span>
-            </p>
-
-            <p>
-                <strong>Category:</strong>
-                <span th:text="${product.category}"></span>
-            </p>
-
-            <p>
-                <strong>Condition:</strong>
-                <span class="condition"
-                      th:text="${product.condition}">
-                </span>
-            </p>
-            <form th:action="@{/cart/add/{productId}(productId=${product.id})}"
-                  method="post">
-
-                <button type="submit" class="add-cart-btn">
-                    🛒 Add to Cart
-                </button>
-
-            </form>
-            <a class="buy-button"
-               th:href="@{/checkout/buy-now/{id}(id=${product.id})}">
-                ⚡ Buy Now
-            </a>
-
-        </div>
-
-    </div>
-
+    </main>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

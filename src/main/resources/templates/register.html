@@ -1,73 +1,183 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Register - ReWear</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join ReWear | Sustainable Pre-Loved Fashion</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('rewear-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        body {
-            font-family: Arial;
-            background: #eef3ef;
+        .auth-page {
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #faf8f5 0%, #f0ece3 100%);
+            position: relative;
         }
-        .box {
-            background: white;
-            padding: 35px;
-            width: 350px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px #0002;
+
+        .auth-top-bar {
+            position: absolute;
+            top: 24px;
+            right: 24px;
         }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+
+        .auth-brand-header {
+            text-align: center;
+            margin-bottom: 24px;
         }
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #234b38;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
+
+        .auth-brand-logo {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 2.5px;
+            color: var(--primary-900);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-        a { color: #234b38; }
-        .error { color: red; }
+
+        .auth-brand-sub {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-terracotta);
+            font-weight: 700;
+            display: block;
+            margin-top: 2px;
+        }
     </style>
 </head>
+
 <body>
 
-<div class="box">
-    <h1>Join ReWear</h1>
-    <p>Create your customer account.</p>
+<div class="auth-page">
 
-    <p class="error" th:if="${error}" th:text="${error}"></p>
+    <div class="auth-top-bar">
+        <button type="button"
+                class="rw-theme-toggle"
+                id="authThemeToggle"
+                onclick="toggleAuthTheme()"
+                style="background: var(--surface-subtle); color: var(--text-primary); border-color: var(--surface-border);">
+            <span class="rw-theme-toggle-icon" id="authThemeIcon">🌙</span>
+            <span id="authThemeLabel">Dark</span>
+        </button>
+    </div>
 
-    <form th:action="@{/register}" method="post">
+    <div class="auth-brand-header">
+        <a th:href="@{/}" class="auth-brand-logo">
+            REWEAR<span class="rw-brand-dot"></span>
+        </a>
+        <span class="auth-brand-sub">Fashion With A Second Life</span>
+    </div>
 
-        <input type="text" name="name"
-               placeholder="Full Name" required>
+    <div class="rw-auth-box">
 
-        <input type="email" name="email"
-               placeholder="Email Address" required>
+        <h1 style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: var(--primary-900); margin-bottom: 6px;">
+            Join the Movement
+        </h1>
+        <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;">
+            Create your account to start buying and listing pre-loved clothes.
+        </p>
 
-        <input type="password" name="password"
-               placeholder="Password (minimum 8 characters)"
-               minlength="8" required>
+        <!-- Error Alert -->
+        <div class="alert alert-error" th:if="${error}">
+            <span>⚠️</span>
+            <span th:text="${error}"></span>
+        </div>
 
-        <button type="submit">Create Account</button>
-    </form>
+        <!-- Registration Form -->
+        <form th:action="@{/register}" method="post">
 
-    <p>Already registered?
-        <a th:href="@{/login}">Login here</a>
-    </p>
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text"
+                       class="form-control"
+                       name="name"
+                       placeholder="e.g. Eleanor Vance"
+                       required
+                       autofocus>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email"
+                       class="form-control"
+                       name="email"
+                       placeholder="name@example.com"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password"
+                       class="form-control"
+                       name="password"
+                       placeholder="Minimum 8 characters"
+                       minlength="8"
+                       required>
+                <span class="form-help">Must contain at least 8 characters.</span>
+            </div>
+
+            <div style="margin-top: 24px;">
+                <button type="submit" class="btn btn-terracotta btn-lg btn-block">
+                    Create Account →
+                </button>
+            </div>
+
+        </form>
+
+        <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--surface-border-subtle); text-align: center; font-size: 14px; color: var(--text-secondary);">
+            Already have an account?
+            <a th:href="@{/login}" style="color: var(--primary-700); font-weight: 700;">
+                Log In
+            </a>
+        </div>
+
+        <div style="margin-top: 16px; text-align: center;">
+            <a th:href="@{/}" style="font-size: 13px; color: var(--text-muted);">
+                ← Back to Homepage
+            </a>
+        </div>
+
+    </div>
+
 </div>
+
+<script>
+    function updateAuthThemeControls(theme) {
+        const icon = document.getElementById('authThemeIcon');
+        const label = document.getElementById('authThemeLabel');
+        if (icon && label) {
+            if (theme === 'dark') {
+                icon.textContent = '☀️';
+                label.textContent = 'Light';
+            } else {
+                icon.textContent = '🌙';
+                label.textContent = 'Dark';
+            }
+        }
+    }
+
+    function toggleAuthTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('rewear-theme', next);
+        updateAuthThemeControls(next);
+    }
+
+    updateAuthThemeControls(document.documentElement.getAttribute('data-theme'));
+</script>
 
 </body>
 </html>

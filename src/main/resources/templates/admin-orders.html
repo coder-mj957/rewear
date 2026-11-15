@@ -1,87 +1,70 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Manage Orders</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Order Management | ReWear</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('rewear-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f4;
-            margin: 0;
-            padding: 25px;
+        .admin-order-card {
+            background: #ffffff;
+            border: 1px solid var(--surface-border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 26px 30px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: auto;
+        .admin-order-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--surface-border);
         }
 
-        h1 {
-            color: #234b38;
-            margin-bottom: 25px;
-        }
-
-        .order-card {
-            background: white;
-            padding: 22px;
-            margin-bottom: 18px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px #00000012;
-        }
-
-        .order-info {
+        .admin-meta-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--surface-border-subtle);
         }
 
-        .label {
-            color: #777;
-            font-size: 13px;
+        .admin-field-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
         }
 
-        .value {
-            font-weight: bold;
-            margin-top: 5px;
+        .admin-field-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
-        select, button {
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            background: #234b38;
-            color: white;
-            cursor: pointer;
-            border: none;
-        }
-
-        button:hover {
-            background: #183526;
-        }
-
-        a {
-            color: #234b38;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .status-form {
+        .admin-controls-row {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .status-update-form {
+            display: flex;
+            align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            margin-top: 15px;
-        }
-
-        .empty {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
+            margin: 0;
         }
     </style>
 </head>
@@ -90,72 +73,112 @@
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container">
+<div class="rw-page-wrap">
+    <main class="rw-container rw-section">
 
-    <h1>Admin Dashboard - Manage Orders</h1>
-
-    <div th:if="${#lists.isEmpty(orders)}" class="empty">
-        <h3>No orders have been placed yet.</h3>
-    </div>
-
-    <div th:each="order : ${orders}" class="order-card">
-
-        <div class="order-info">
-
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; flex-wrap: wrap; gap: 16px;">
             <div>
-                <div class="label">Order ID</div>
-                <div class="value" th:text="${order.id}"></div>
+                <span style="font-size: 12px; font-weight: 700; color: var(--accent-terracotta); letter-spacing: 2px; text-transform: uppercase;">
+                    Operations Portal
+                </span>
+                <h1 style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--primary-900); margin-top: 4px;">
+                    Order Fulfillment Dashboard
+                </h1>
+                <p style="font-size: 15px; color: var(--text-secondary);">
+                    Manage customer orders, adjust fulfillment status, and inspect buyer invoice records.
+                </p>
             </div>
 
-            <div>
-                <div class="label">Customer</div>
-                <div class="value" th:text="${order.customerName}"></div>
+            <div style="background: var(--primary-50); border: 1px solid var(--primary-100); padding: 8px 18px; border-radius: var(--radius-full); font-size: 13.5px; font-weight: 700; color: var(--primary-800);">
+                🔐 Administrator Access
             </div>
+        </div>
 
-            <div>
-                <div class="label">Order Date</div>
-                <div class="value"
-                     th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}">
+        <!-- Empty Orders State -->
+        <div th:if="${#lists.isEmpty(orders)}" class="rw-empty-state">
+            <div class="rw-empty-icon">📋</div>
+            <h3 class="rw-empty-title">No orders have been placed yet</h3>
+            <p class="rw-empty-desc">When customers purchase items from ReWear, their fulfillment orders will appear here for processing.</p>
+        </div>
+
+        <!-- Orders Management Cards -->
+        <div th:unless="${#lists.isEmpty(orders)}">
+
+            <div th:each="order : ${orders}" class="admin-order-card">
+
+                <div class="admin-meta-grid">
+                    <div>
+                        <div class="admin-field-label">Order Reference</div>
+                        <div class="admin-field-value" style="color: var(--primary-800);" th:text="'#' + ${order.id}"></div>
+                    </div>
+
+                    <div>
+                        <div class="admin-field-label">Customer Name</div>
+                        <div class="admin-field-value" th:text="${order.customerName}"></div>
+                    </div>
+
+                    <div>
+                        <div class="admin-field-label">Placed On</div>
+                        <div class="admin-field-value" th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}"></div>
+                    </div>
+
+                    <div>
+                        <div class="admin-field-label">Total Amount</div>
+                        <div class="admin-field-value" style="font-family: var(--font-heading); font-size: 18px;">
+                            ₹<span th:text="${order.totalAmount}"></span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="admin-field-label">Current Status</div>
+                        <div style="margin-top: 4px;">
+                            <span class="badge"
+                                  th:classappend="${order.status == 'DELIVERED' ? 'badge-status-delivered' : (order.status == 'SHIPPED' ? 'badge-status-shipped' : (order.status == 'CONFIRMED' ? 'badge-status-confirmed' : (order.status == 'CANCELLED' ? 'badge-status-cancelled' : 'badge-status-placed')))}"
+                                  th:text="${order.status}">
+                            </span>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div>
-                <div class="label">Total Amount</div>
-                <div class="value">
-                    ₹<span th:text="${order.totalAmount}"></span>
+                <div class="admin-controls-row">
+
+                    <a class="btn btn-secondary btn-sm" th:href="@{/orders/{id}(id=${order.id})}">
+                        🔍 Inspect Order &amp; Items →
+                    </a>
+
+                    <!-- Status Update Form -->
+                    <form class="status-update-form"
+                          th:action="@{/admin/orders/{id}/status(id=${order.id})}"
+                          method="post">
+
+                        <label style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">
+                            Update Status:
+                        </label>
+
+                        <select name="status" class="form-select" style="width: auto; padding: 7px 12px; font-size: 13.5px;">
+                            <option th:each="status : ${statuses}"
+                                    th:value="${status}"
+                                    th:text="${status}"
+                                    th:selected="${status == order.status}">
+                            </option>
+                        </select>
+
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            Save Status
+                        </button>
+
+                    </form>
+
                 </div>
-            </div>
 
-            <div>
-                <div class="label">Current Status</div>
-                <div class="value" th:text="${order.status}"></div>
             </div>
 
         </div>
 
-        <a th:href="@{/orders/{id}(id=${order.id})}">
-            View Order Details →
-        </a>
-
-        <form class="status-form"
-              th:action="@{/admin/orders/{id}/status(id=${order.id})}"
-              method="post">
-
-            <select name="status">
-                <option th:each="status : ${statuses}"
-                        th:value="${status}"
-                        th:text="${status}"
-                        th:selected="${status == order.status}">
-                </option>
-            </select>
-
-            <button type="submit">Update Status</button>
-
-        </form>
-
-    </div>
-
+    </main>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

@@ -1,61 +1,77 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Order History - ReWear</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History | ReWear</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('rewear-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #222;
-        }
-
-        .container {
-            width: 85%;
-            margin: 40px auto;
-        }
-
-        h1 {
-            margin-bottom: 25px;
-        }
-
-        .order-card {
-            background: white;
-            padding: 25px;
+        .order-history-card {
+            background: #ffffff;
+            border: 1px solid var(--surface-border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
             margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px #00000012;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
         }
 
-        .order-info {
+        .order-history-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--surface-border);
+        }
+
+        .order-header-row {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 16px;
+            border-bottom: 1px solid var(--surface-border-subtle);
+            padding-bottom: 16px;
+            margin-bottom: 16px;
         }
 
-        .status {
-            color: green;
-            font-weight: bold;
+        .order-id-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-900);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .details-btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 18px;
-            background: #222;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
+        .order-meta-info {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            margin-top: 4px;
         }
 
-        .empty {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
+        .order-pricing {
+            text-align: right;
+        }
+
+        .order-amount {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary-900);
+        }
+
+        @media (max-width: 600px) {
+            .order-header-row {
+                flex-direction: column;
+            }
+            .order-pricing {
+                text-align: left;
+            }
         }
     </style>
 </head>
@@ -64,56 +80,76 @@
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container">
+<div class="rw-page-wrap">
+    <main class="rw-container rw-container-medium rw-section">
 
-    <h1>My Order History</h1>
+        <div style="margin-bottom: 32px;">
+            <span style="font-size: 12px; font-weight: 700; color: var(--accent-terracotta); letter-spacing: 2px; text-transform: uppercase;">
+                Account Activity
+            </span>
+            <h1 style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--primary-900); margin-top: 4px;">
+                My Order History
+            </h1>
+            <p style="font-size: 15px; color: var(--text-secondary);">
+                Track previous sustainable purchases and review itemized invoice receipts.
+            </p>
+        </div>
 
-    <div th:if="${#lists.isEmpty(orders)}" class="empty">
-        <h2>No orders yet!</h2>
-        <p>Your previous purchases will appear here.</p>
-        <a th:href="@{/products}" class="details-btn">
-            Explore Products
-        </a>
-    </div>
+        <!-- Empty Orders State -->
+        <div th:if="${#lists.isEmpty(orders)}" class="rw-empty-state">
+            <div class="rw-empty-icon">📦</div>
+            <h3 class="rw-empty-title">No orders placed yet</h3>
+            <p class="rw-empty-desc">Your previous pre-loved fashion purchases will appear here once you make your first order.</p>
+            <a th:href="@{/products}" class="btn btn-primary btn-lg">
+                Start Exploring Garments
+            </a>
+        </div>
 
-    <div th:each="order : ${orders}" class="order-card">
+        <!-- Orders List -->
+        <div th:unless="${#lists.isEmpty(orders)}">
 
-        <div class="order-info">
+            <div th:each="order : ${orders}" class="order-history-card">
 
-            <div>
-                <h3 th:text="'Order #' + ${order.id}"></h3>
+                <div class="order-header-row">
+                    <div>
+                        <div class="order-id-title">
+                            <span th:text="'Order #' + ${order.id}">Order #1</span>
+                            <span class="badge"
+                                  th:classappend="${order.status == 'DELIVERED' ? 'badge-status-delivered' : (order.status == 'SHIPPED' ? 'badge-status-shipped' : (order.status == 'CONFIRMED' ? 'badge-status-confirmed' : (order.status == 'CANCELLED' ? 'badge-status-cancelled' : 'badge-status-placed')))}"
+                                  th:text="${order.status}">
+                            </span>
+                        </div>
 
-                <p>
-                    Customer:
-                    <span th:text="${order.customerName}"></span>
-                </p>
+                        <div class="order-meta-info">
+                            Customer: <strong th:text="${order.customerName}"></strong> •
+                            Date: <span th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}"></span>
+                        </div>
+                    </div>
 
-                <p>
-                    Date:
-                    <span th:text="${#temporals.format(order.orderDate, 'dd-MM-yyyy HH:mm')}"></span>
-                </p>
-            </div>
+                    <div class="order-pricing">
+                        <div class="order-amount">
+                            ₹<span th:text="${order.totalAmount}"></span>
+                        </div>
+                        <div style="font-size: 12px; color: var(--status-success); font-weight: 600;">
+                            Carbon Neutral Shipping
+                        </div>
+                    </div>
+                </div>
 
-            <div>
-                <h3>
-                    ₹<span th:text="${order.totalAmount}"></span>
-                </h3>
+                <div style="display: flex; justify-content: flex-end;">
+                    <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-secondary btn-sm">
+                        View Order Details &amp; Items →
+                    </a>
+                </div>
 
-                <p class="status"
-                   th:text="${order.status}">
-                </p>
             </div>
 
         </div>
 
-        <a th:href="@{/orders/{id}(id=${order.id})}"
-           class="details-btn">
-            View Order Details →
-        </a>
-
-    </div>
-
+    </main>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

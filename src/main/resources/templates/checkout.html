@@ -1,109 +1,190 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Checkout | REWEAR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | ReWear</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('rewear-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
-            color: #222;
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1.6fr 1.1fr;
+            gap: 40px;
+            align-items: start;
+            margin-top: 24px;
         }
 
-        header {
-            background: #222;
-            color: white;
-            padding: 22px 8%;
-            font-size: 25px;
-            font-weight: bold;
-            letter-spacing: 2px;
+        @media (max-width: 860px) {
+            .checkout-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .container {
-            max-width: 650px;
-            margin: 40px auto;
+        .checkout-panel {
+            background: #ffffff;
+            border: 1px solid var(--surface-border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 36px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .checkout-section-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-900);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .summary-card-checkout {
+            background: #fbfaf7;
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-xl);
             padding: 30px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-
-        input, textarea {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 13px;
-            margin: 9px 0 18px;
-            border: 1px solid #ddd;
-            border-radius: 7px;
-            font-size: 15px;
-        }
-
-        label {
-            font-weight: 600;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background: #222;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #444;
-        }
-
-        .total {
-            font-size: 22px;
-            font-weight: bold;
-            margin: 25px 0;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 100px;
         }
     </style>
 </head>
+
 <body>
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container">
+<div class="rw-page-wrap">
+    <main class="rw-container rw-section">
 
-    <h1>Checkout</h1>
-    <p>Please enter your delivery details.</p>
+        <a class="btn btn-secondary btn-sm"
+           th:href="@{/cart}"
+           style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;">
+            ← Back to Cart
+        </a>
 
-    <form th:action="@{/checkout/place-order}" method="post">
-
-        <label>Full Name</label>
-        <input type="text" name="customerName"
-               placeholder="Enter your full name" required>
-
-        <label>Email Address</label>
-        <input type="email" name="email"
-               placeholder="Enter your email" required>
-
-        <label>Phone Number</label>
-        <input type="tel" name="phone"
-               placeholder="Enter your phone number"
-               pattern="[0-9]{10}" maxlength="10" required>
-
-        <label>Delivery Address</label>
-        <textarea name="address" rows="4"
-                  placeholder="Enter your complete address"
-                  required></textarea>
-
-        <div class="total">
-            Total Amount: ₹<span th:text="${cartTotal}"></span>
+        <div style="margin-bottom: 28px;">
+            <span style="font-size: 12px; font-weight: 700; color: var(--accent-terracotta); letter-spacing: 2px; text-transform: uppercase;">
+                Final Step
+            </span>
+            <h1 style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--primary-900);">
+                Shipping &amp; Order Confirmation
+            </h1>
+            <p style="font-size: 15px; color: var(--text-secondary);">
+                Please provide your delivery destination to complete your purchase.
+            </p>
         </div>
 
-        <button type="submit">Place Order</button>
+        <form th:action="@{/checkout/place-order}" method="post">
 
-    </form>
+            <div class="checkout-layout">
 
+                <!-- Left Column: Delivery Details -->
+                <div class="checkout-panel">
+                    <h2 class="checkout-section-title">
+                        📍 Delivery Address &amp; Contact
+                    </h2>
+
+                    <div class="form-group">
+                        <label class="form-label">Full Recipient Name *</label>
+                        <input type="text"
+                               class="form-control"
+                               name="customerName"
+                               placeholder="e.g. Eleanor Vance"
+                               required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email"
+                                   class="form-control"
+                                   name="email"
+                                   placeholder="name@example.com"
+                                   required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Phone Number (10 digits) *</label>
+                            <input type="tel"
+                                   class="form-control"
+                                   name="phone"
+                                   placeholder="e.g. 9876543210"
+                                   pattern="[0-9]{10}"
+                                   maxlength="10"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Full Street Delivery Address *</label>
+                        <textarea class="form-control"
+                                  name="address"
+                                  rows="4"
+                                  placeholder="Apartment/Flat, Street name, Landmark, City, State, PIN Code"
+                                  required></textarea>
+                    </div>
+
+                    <div style="margin-top: 18px; padding: 14px; background: var(--surface-subtle); border-radius: var(--radius-md); font-size: 13px; color: var(--text-secondary); display: flex; gap: 10px; align-items: center;">
+                        <span>📦</span>
+                        <span>All orders are shipped via climate-compensated carbon-neutral courier partners.</span>
+                    </div>
+                </div>
+
+                <!-- Right Column: Order Summary Sidebar -->
+                <div class="summary-card-checkout">
+                    <h3 style="font-family: var(--font-heading); font-size: 19px; font-weight: 800; color: var(--primary-900); margin-bottom: 18px;">
+                        Payment Summary
+                    </h3>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14.5px; color: var(--text-secondary);">
+                        <span>Cart Total</span>
+                        <span style="font-weight: 600;">₹<span th:text="${cartTotal}"></span></span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14.5px; color: var(--text-secondary);">
+                        <span>Eco Delivery</span>
+                        <span style="color: var(--status-success); font-weight: 700;">FREE</span>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 14.5px; color: var(--text-secondary);">
+                        <span>Payment Method</span>
+                        <span style="font-weight: 600; color: var(--primary-800);">Direct Order</span>
+                    </div>
+
+                    <div style="border-top: 2px dashed var(--surface-border); padding-top: 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: baseline;">
+                        <span style="font-size: 17px; font-weight: 700; color: var(--primary-900);">Total to Pay</span>
+                        <span style="font-family: var(--font-heading); font-size: 26px; font-weight: 800; color: var(--primary-900);">
+                            ₹<span th:text="${cartTotal}"></span>
+                        </span>
+                    </div>
+
+                    <div style="margin-top: 26px;">
+                        <button type="submit" class="btn btn-accent btn-lg btn-block">
+                            ✓ Confirm &amp; Place Order
+                        </button>
+                    </div>
+
+                    <div style="margin-top: 18px; font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.5;">
+                        🔒 By placing this order, you agree to ReWear's community terms for sustainable second-hand commerce.
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+
+    </main>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

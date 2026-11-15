@@ -1,58 +1,90 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Order Confirmed | REWEAR</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | ReWear</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('rewear-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
-            color: #222;
+        .confirmation-card {
+            background: #ffffff;
+            border: 1px solid var(--surface-border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            box-shadow: var(--shadow-lg);
+            max-width: 680px;
+            margin: 30px auto;
             text-align: center;
         }
 
-        header {
-            background: #222;
-            color: white;
-            padding: 22px;
-            font-size: 25px;
-            font-weight: bold;
-            letter-spacing: 2px;
+        .success-icon-wrap {
+            width: 76px;
+            height: 76px;
+            background: #dff2e9;
+            border: 2px solid #b7e4ce;
+            color: #0c613e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            font-weight: 800;
+            margin: 0 auto 20px;
         }
 
-        .confirmation {
-            max-width: 600px;
-            margin: 70px auto;
-            padding: 40px;
-            background: white;
-            border-radius: 14px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-
-        .success {
-            font-size: 60px;
-        }
-
-        .details {
+        .receipt-box {
+            background: #fbfaf7;
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin: 28px 0;
             text-align: left;
-            background: #f7f7f7;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 25px;
-            line-height: 1.8;
         }
 
-        a {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 13px 25px;
-            background: #222;
-            color: white;
-            text-decoration: none;
-            border-radius: 7px;
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--surface-border-subtle);
+            font-size: 14.5px;
+            gap: 16px;
+        }
+
+        .receipt-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .receipt-label {
+            color: var(--text-muted);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .receipt-val {
+            color: var(--text-primary);
+            font-weight: 700;
+            text-align: right;
+        }
+
+        @media (max-width: 600px) {
+            .confirmation-card {
+                padding: 30px 20px;
+            }
+            .receipt-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .receipt-val {
+                text-align: left;
+            }
         }
     </style>
 </head>
@@ -61,51 +93,76 @@
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="confirmation">
+<div class="rw-page-wrap">
+    <main class="rw-container rw-section">
 
-    <div class="success">✓</div>
+        <div class="confirmation-card">
 
-    <h1>Order Placed Successfully!</h1>
+            <div class="success-icon-wrap">✓</div>
 
-    <p>Thank you for shopping with ReWear.</p>
+            <span style="font-size: 12px; font-weight: 700; color: var(--status-success); letter-spacing: 2px; text-transform: uppercase;">
+                Order Confirmed
+            </span>
 
-    <div class="details">
+            <h1 style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--primary-900); margin-top: 6px;">
+                Thank You for Your Order!
+            </h1>
 
-        <p>
-            <strong>Order ID:</strong>
-            <span th:text="${order.id}"></span>
-        </p>
+            <p style="font-size: 15px; color: var(--text-secondary); max-width: 500px; margin: 8px auto 0;">
+                Your sustainable fashion order has been received and will be packaged with eco-friendly materials.
+            </p>
 
-        <p>
-            <strong>Customer:</strong>
-            <span th:text="${order.customerName}"></span>
-        </p>
+            <div class="receipt-box">
+                <div class="receipt-row">
+                    <span class="receipt-label">Order Number</span>
+                    <span class="receipt-val" style="color: var(--primary-800);" th:text="'#' + ${order.id}"></span>
+                </div>
 
-        <p>
-            <strong>Email:</strong>
-            <span th:text="${order.email}"></span>
-        </p>
+                <div class="receipt-row">
+                    <span class="receipt-label">Customer Name</span>
+                    <span class="receipt-val" th:text="${order.customerName}"></span>
+                </div>
 
-        <p>
-            <strong>Delivery Address:</strong>
-            <span th:text="${order.address}"></span>
-        </p>
+                <div class="receipt-row">
+                    <span class="receipt-label">Confirmation Email</span>
+                    <span class="receipt-val" th:text="${order.email}"></span>
+                </div>
 
-        <p>
-            <strong>Total Paid:</strong>
-            ₹<span th:text="${order.totalAmount}"></span>
-        </p>
+                <div class="receipt-row">
+                    <span class="receipt-label">Delivery Destination</span>
+                    <span class="receipt-val" th:text="${order.address}"></span>
+                </div>
 
-        <p>
-            <strong>Status:</strong>
-            <span th:text="${order.status}"></span>
-        </p>
+                <div class="receipt-row">
+                    <span class="receipt-label">Current Status</span>
+                    <span class="receipt-val">
+                        <span class="badge badge-status-placed" th:text="${order.status}"></span>
+                    </span>
+                </div>
 
-    </div>
+                <div class="receipt-row" style="border-top: 1.5px solid var(--surface-border); margin-top: 8px; padding-top: 14px;">
+                    <span class="receipt-label" style="font-size: 16px; color: var(--text-primary); font-weight: 700;">Total Amount</span>
+                    <span class="receipt-val" style="font-family: var(--font-heading); font-size: 22px; color: var(--primary-900);">
+                        ₹<span th:text="${order.totalAmount}"></span>
+                    </span>
+                </div>
+            </div>
 
-    <a th:href="@{/products}">Continue Shopping</a>
+            <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+                <a th:href="@{/orders}" class="btn btn-secondary btn-lg">
+                    View Order History
+                </a>
+                <a th:href="@{/products}" class="btn btn-accent btn-lg">
+                    Continue Shopping →
+                </a>
+            </div>
 
+        </div>
+
+    </main>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

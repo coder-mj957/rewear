@@ -1,49 +1,211 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReWear | Sustainable Fashion</title>
-
+    <title>ReWear | Sustainable Pre-Loved Fashion</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('rewear-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f8f7f3;
+        .hero-section {
+            background: linear-gradient(180deg, #143d30 0%, #0d2820 100%);
+            color: #ffffff;
+            padding: 90px 20px 100px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        header {
-            background: #263c32;
-            color: white;
-            padding: 25px;
+        .hero-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: radial-gradient(#c99a4c 1.5px, transparent 1.5px);
+            background-size: 28px 28px;
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(201, 154, 76, 0.18);
+            border: 1px solid rgba(201, 154, 76, 0.4);
+            color: #e5bc7d;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 7px 18px;
+            border-radius: var(--radius-full);
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(38px, 6vw, 68px);
+            font-weight: 700;
+            line-height: 1.15;
+            color: #ffffff;
+            max-width: 860px;
+            margin: 0 auto 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-title span {
+            color: #deb266;
+            font-style: italic;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(17px, 2.2vw, 21px);
+            color: #c4d9cf;
+            max-width: 620px;
+            margin: 0 auto 36px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* Pillars / Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: -45px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .feature-card {
+            background: #ffffff;
+            padding: 32px 26px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--surface-border-subtle);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-icon-wrap {
+            width: 58px;
+            height: 58px;
+            background: var(--primary-50);
+            color: var(--primary-700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin: 0 auto 18px;
+        }
+
+        .feature-title {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        /* Categories Section */
+        .category-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .category-card {
+            background: #ffffff;
+            border: 1.5px solid var(--surface-border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 26px 20px;
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .category-card:hover {
+            border-color: var(--primary-600);
+            background: #fbf9f4;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .category-card-icon {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .category-card-name {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .category-card-count {
+            font-size: 12.5px;
+            color: var(--accent-terracotta);
+            font-weight: 600;
+        }
+
+        /* CTA Banner */
+        .cta-banner {
+            background: #f3ede2;
+            border: 1px solid #e5dcce;
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 56px;
+        }
+
+        .cta-banner-content h3 {
+            font-family: var(--font-display);
             font-size: 28px;
-            font-weight: bold;
+            color: var(--primary-900);
+            margin-bottom: 8px;
         }
 
-        main {
-            padding: 100px 20px;
-        }
-
-        h1 {
-            font-size: 48px;
-            color: #263c32;
-        }
-
-        p {
-            font-size: 19px;
-            color: #666;
-        }
-
-        button {
-            background: #263c32;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 5px;
+        .cta-banner-content p {
+            color: var(--text-secondary);
             font-size: 16px;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -52,16 +214,118 @@
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<main>
-    <h1>Fashion Deserves a Second Life.</h1>
+<div class="rw-page-wrap">
 
-    <p>
-        Buy and sell pre-loved fashion.
-        Discover your next favourite outfit.
-    </p>
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="hero-pattern"></div>
+        <div class="rw-container">
+            <div class="hero-badge">
+                🌿 Conscious Pre-Loved Fashion
+            </div>
 
-    <button>Explore Collection</button>
-</main>
+            <h1 class="hero-title">
+                Fashion Deserves a <span>Second Life.</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Buy and sell pre-loved fashion. Discover your next favourite outfit while giving premium garments the circular lifecycle they deserve.
+            </p>
+
+            <div class="hero-actions">
+                <a th:href="@{/products}" class="btn btn-accent btn-lg">
+                    Explore Collection →
+                </a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/products/new}" class="btn btn-secondary btn-lg" style="background: rgba(255,255,255,0.15); color: #ffffff; border-color: rgba(255,255,255,0.3);">
+                    + List a Product
+                </a>
+                <a sec:authorize="isAnonymous()" th:href="@{/register}" class="btn btn-secondary btn-lg" style="background: rgba(255,255,255,0.15); color: #ffffff; border-color: rgba(255,255,255,0.3);">
+                    Create Free Account
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Sections -->
+    <main class="rw-container rw-section" style="padding-top: 0;">
+
+        <!-- 3 Feature Pillars -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon-wrap">✨</div>
+                <h3 class="feature-title">Curated Quality</h3>
+                <p class="feature-text">Every garment specifies verified conditions from Brand New With Tags to Fair vintage wear.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrap">🌱</div>
+                <h3 class="feature-title">Circular Impact</h3>
+                <p class="feature-text">Extend garment longevity. Keep beautiful clothes out of landfills and dramatically save water.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon-wrap">⚡</div>
+                <h3 class="feature-title">Direct Checkout</h3>
+                <p class="feature-text">Seamless cart or lightning-fast instant Buy Now checkout with transparent order tracking.</p>
+            </div>
+        </div>
+
+        <!-- Shop by Category -->
+        <div style="margin-top: 64px;">
+            <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <span style="font-size: 12px; font-weight: 700; color: var(--accent-terracotta); letter-spacing: 2px; text-transform: uppercase;">
+                    Curated Categories
+                </span>
+                <h2 style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--primary-900); margin-top: 6px;">
+                    Find What Fits Your Style
+                </h2>
+            </div>
+
+            <div class="category-preview-grid">
+                <a th:href="@{/products(category='Women')}" class="category-card">
+                    <div class="category-card-icon">👗</div>
+                    <div class="category-card-name">Women</div>
+                    <span class="category-card-count">Browse Dresses, Tops &amp; More →</span>
+                </a>
+
+                <a th:href="@{/products(category='Men')}" class="category-card">
+                    <div class="category-card-icon">👔</div>
+                    <div class="category-card-name">Men</div>
+                    <span class="category-card-count">Jackets, Shirts &amp; Trousers →</span>
+                </a>
+
+                <a th:href="@{/products(category='Kids')}" class="category-card">
+                    <div class="category-card-icon">🧸</div>
+                    <div class="category-card-name">Kids</div>
+                    <span class="category-card-count">Everyday essentials &amp; sets →</span>
+                </a>
+
+                <a th:href="@{/products(category='Accessories')}" class="category-card">
+                    <div class="category-card-icon">👜</div>
+                    <div class="category-card-name">Accessories</div>
+                    <span class="category-card-count">Bags, Scarves &amp; Jewelry →</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Seller CTA Banner -->
+        <div class="cta-banner">
+            <div class="cta-banner-content">
+                <h3>Have Clothes You No Longer Wear?</h3>
+                <p>Pass them on to someone who will treasure them. Listing takes less than two minutes.</p>
+            </div>
+            <div>
+                <a th:href="@{/products/new}" class="btn btn-primary btn-lg">
+                    Start Selling Today →
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
@@ -7,219 +6,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>ReWear | Shop Fashion</title>
-
+    <title>ReWear | Explore Pre-Loved Fashion</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('rewear-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        * {
-            box-sizing: border-box;
+        .filter-panel {
+            background: #ffffff;
+            border: 1px solid var(--surface-border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 36px;
         }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f8f7f3;
-            color: #263c32;
-        }
-
-        .container {
-            padding: 40px 7%;
-        }
-
-        h1 {
-            font-size: 36px;
-        }
-
-        .add-product-btn {
-            display: inline-block;
-            background: #263c32;
-            color: white;
-            padding: 12px 20px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .add-product-btn:hover {
-            background: #42654f;
-        }
-
-        .products {
+        .filter-form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 25px;
-        }
-
-        .product-item {
-            min-width: 0;
-        }
-
-        .product-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        .card {
-            background: white;
-            padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 3px 12px #00000010;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 22px #00000018;
-        }
-
-        .product-image {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 8px;
-            background: #e9e8df;
-        }
-
-        .card h3 {
-            margin-bottom: 8px;
-        }
-
-        .price {
-            font-size: 23px;
-            font-weight: bold;
-            color: #286044;
-        }
-
-        .details {
-            color: #777;
-            font-size: 14px;
-        }
-
-        .condition {
-            display: inline-block;
-            background: #e4f0e7;
-            padding: 7px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
-
-        .view-more {
-            color: #286044;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-
-        /* Edit and Delete buttons */
-        .product-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 15px;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto auto;
+            gap: 14px;
             align-items: center;
         }
 
-        .edit-btn,
-        .delete-btn {
-            flex: 1;
-            padding: 11px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.25s ease;
+        @media (max-width: 992px) {
+            .filter-form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
-        .edit-btn {
-            background: #222;
-            color: white;
-            border: 1px solid #222;
+        @media (max-width: 600px) {
+            .filter-form-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .edit-btn:hover {
-            background: #444;
-            transform: translateY(-2px);
-        }
-
-        .delete-btn {
-            background: #fff0f0;
-            color: #d32f2f;
-            border: 1px solid #ffcaca;
-        }
-
-        .delete-btn:hover {
-            background: #d32f2f;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .product-actions form {
-            flex: 1;
-            margin: 0;
-        }
-
-        .product-actions form button {
-            width: 100%;
-        }
-
-        /* Search and filters */
-        .filter-form {
+        .catalog-header {
             display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 28px;
             flex-wrap: wrap;
-            gap: 12px;
-            margin: 25px 0;
-            align-items: center;
+            gap: 16px;
         }
 
-        .filter-form input,
-        .filter-form select {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
+        .catalog-title {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-900);
+            letter-spacing: -0.01em;
         }
 
-        .filter-form input {
-            flex: 2;
-            min-width: 180px;
-        }
-
-        .filter-form select {
-            flex: 1;
-        }
-
-        .filter-form button {
-            padding: 12px 18px;
-            background: #222;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .filter-form a {
-            color: #555;
-            text-decoration: none;
-        }
-
-        .empty-message {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            text-align: center;
-            grid-column: 1 / -1;
-        }
-
-        @media(max-width: 600px) {
-            .container {
-                padding: 25px 5%;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
+        .catalog-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -228,155 +72,197 @@
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container">
+<div class="rw-page-wrap">
+    <main class="rw-container rw-section">
 
-    <h1>Explore Pre-loved Fashion</h1>
+        <!-- Catalog Header -->
+        <div class="catalog-header">
+            <div>
+                <span style="font-size: 12px; font-weight: 700; color: var(--accent-terracotta); letter-spacing: 2px; text-transform: uppercase;">
+                    Curated Collection
+                </span>
+                <h1 class="catalog-title">Explore Pre-Loved Fashion</h1>
+                <p class="catalog-subtitle">Find high-quality clothing, vintage gems, and everyday essentials at circular prices.</p>
+            </div>
 
-    <!-- Only logged-in users can add products -->
-    <a sec:authorize="isAuthenticated()"
-       class="add-product-btn"
-       th:href="@{/products/new}">
-        + Add Product
-    </a>
+            <!-- Only logged-in users can add products -->
+            <a sec:authorize="isAuthenticated()"
+               class="btn btn-primary"
+               th:href="@{/products/new}">
+                + List New Garment
+            </a>
+        </div>
 
-    <p>Find your next favourite outfit at a better price.</p>
+        <!-- Search & Filter Panel -->
+        <div class="filter-panel">
+            <form th:action="@{/products}"
+                  method="get"
+                  class="filter-form-grid">
 
-    <!-- Search and filters -->
-    <form th:action="@{/products}"
-          method="get"
-          class="filter-form">
-
-        <input type="text"
-               name="keyword"
-               placeholder="Search products..."
-               th:value="${keyword}">
-
-        <select name="category">
-            <option value=""
-                    th:selected="${selectedCategory == null or selectedCategory == ''}">
-                All Categories
-            </option>
-            <option value="Men"
-                    th:selected="${selectedCategory == 'Men'}">Men</option>
-            <option value="Women"
-                    th:selected="${selectedCategory == 'Women'}">Women</option>
-            <option value="Kids"
-                    th:selected="${selectedCategory == 'Kids'}">Kids</option>
-            <option value="Accessories"
-                    th:selected="${selectedCategory == 'Accessories'}">Accessories</option>
-        </select>
-
-        <select name="size">
-            <option value=""
-                    th:selected="${selectedSize == null or selectedSize == ''}">
-                All Sizes
-            </option>
-            <option value="XS" th:selected="${selectedSize == 'XS'}">XS</option>
-            <option value="S" th:selected="${selectedSize == 'S'}">S</option>
-            <option value="M" th:selected="${selectedSize == 'M'}">M</option>
-            <option value="L" th:selected="${selectedSize == 'L'}">L</option>
-            <option value="XL" th:selected="${selectedSize == 'XL'}">XL</option>
-            <option value="XXL" th:selected="${selectedSize == 'XXL'}">XXL</option>
-        </select>
-
-        <select name="sortBy">
-            <option value=""
-                    th:selected="${selectedSort == null or selectedSort == ''}">
-                Default Sorting
-            </option>
-            <option value="priceLow"
-                    th:selected="${selectedSort == 'priceLow'}">
-                Price: Low to High
-            </option>
-            <option value="priceHigh"
-                    th:selected="${selectedSort == 'priceHigh'}">
-                Price: High to Low
-            </option>
-        </select>
-
-        <button type="submit">Search &amp; Filter</button>
-
-        <a th:href="@{/products}">Clear Filters</a>
-
-    </form>
-
-    <!-- Products -->
-    <div class="products">
-
-        <div class="product-item"
-             th:each="product : ${products}">
-
-            <a class="product-link"
-               th:href="@{/products/{id}(id=${product.id})}">
-
-                <div class="card">
-
-                    <img class="product-image"
-                         th:src="${product.imageUrl}"
-                         th:alt="${product.name}">
-
-                    <h3 th:text="${product.name}"></h3>
-
-                    <p class="details"
-                       th:text="${product.description}"></p>
-
-                    <p class="price">
-                        ₹<span th:text="${product.price}"></span>
-                    </p>
-
-                    <p>
-                        Size: <span th:text="${product.size}"></span>
-                    </p>
-
-                    <p>
-                        Category: <span th:text="${product.category}"></span>
-                    </p>
-
-                    <span class="condition"
-                          th:text="${product.condition}">
-                    </span>
-
-                    <p class="view-more">View Details →</p>
-
+                <!-- Keyword Search -->
+                <div>
+                    <input type="text"
+                           class="form-control"
+                           name="keyword"
+                           placeholder="🔍 Search titles, styles..."
+                           th:value="${keyword}">
                 </div>
 
-            </a>
+                <!-- Category Filter -->
+                <div>
+                    <select name="category" class="form-select">
+                        <option value=""
+                                th:selected="${selectedCategory == null or selectedCategory == ''}">
+                            All Categories
+                        </option>
+                        <option value="Men"
+                                th:selected="${selectedCategory == 'Men'}">Men</option>
+                        <option value="Women"
+                                th:selected="${selectedCategory == 'Women'}">Women</option>
+                        <option value="Kids"
+                                th:selected="${selectedCategory == 'Kids'}">Kids</option>
+                        <option value="Accessories"
+                                th:selected="${selectedCategory == 'Accessories'}">Accessories</option>
+                    </select>
+                </div>
 
-            <!-- Only product owner or admin sees these buttons -->
-            <div class="product-actions"
-                 th:if="${manageableProductIds != null and manageableProductIds.contains(product.id)}">
+                <!-- Size Filter -->
+                <div>
+                    <select name="size" class="form-select">
+                        <option value=""
+                                th:selected="${selectedSize == null or selectedSize == ''}">
+                            All Sizes
+                        </option>
+                        <option value="XS" th:selected="${selectedSize == 'XS'}">XS</option>
+                        <option value="S" th:selected="${selectedSize == 'S'}">S</option>
+                        <option value="M" th:selected="${selectedSize == 'M'}">M</option>
+                        <option value="L" th:selected="${selectedSize == 'L'}">L</option>
+                        <option value="XL" th:selected="${selectedSize == 'XL'}">XL</option>
+                        <option value="XXL" th:selected="${selectedSize == 'XXL'}">XXL</option>
+                    </select>
+                </div>
 
-                <a class="edit-btn"
-                   th:href="@{/products/edit/{id}(id=${product.id})}">
-                    ✏️ Edit
+                <!-- Sort By -->
+                <div>
+                    <select name="sortBy" class="form-select">
+                        <option value=""
+                                th:selected="${selectedSort == null or selectedSort == ''}">
+                            Sort: Default
+                        </option>
+                        <option value="priceLow"
+                                th:selected="${selectedSort == 'priceLow'}">
+                            Price: Low to High
+                        </option>
+                        <option value="priceHigh"
+                                th:selected="${selectedSort == 'priceHigh'}">
+                            Price: High to Low
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" class="btn btn-secondary btn-block">
+                        Filter
+                    </button>
+                </div>
+
+                <!-- Clear Filters -->
+                <div>
+                    <a th:href="@{/products}" class="btn btn-outline btn-block" style="border-color: var(--surface-border); color: var(--text-muted);">
+                        Reset
+                    </a>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="product-grid" th:unless="${#lists.isEmpty(products)}">
+
+            <div class="product-card" th:each="product : ${products}">
+
+                <a th:href="@{/products/{id}(id=${product.id})}" style="display: flex; flex-direction: column; flex-grow: 1; text-decoration: none; color: inherit;">
+
+                    <div class="product-img-wrap">
+                        <!-- Condition Badge -->
+                        <span class="badge product-condition-tag"
+                              th:classappend="${product.condition == T(Rewear.Product.Condition).NEW_WITH_TAGS ? 'badge-condition-new' : (product.condition == T(Rewear.Product.Condition).LIKE_NEW ? 'badge-condition-like-new' : (product.condition == T(Rewear.Product.Condition).GOOD ? 'badge-condition-good' : 'badge-condition-fair'))}"
+                              th:text="${product.condition}">
+                        </span>
+
+                        <!-- Product Image with fallback -->
+                        <img class="product-img"
+                             th:src="${product.imageUrl != null and !product.imageUrl.isEmpty() ? product.imageUrl : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=600&q=80'}"
+                             th:alt="${product.name}"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=600&q=80';">
+                    </div>
+
+                    <div class="product-content">
+                        <div class="product-meta-row">
+                            <span class="product-category-tag" th:text="${product.category}"></span>
+                            <span class="product-size-tag">
+                                Size: <strong th:text="${product.size}"></strong>
+                            </span>
+                        </div>
+
+                        <h3 class="product-title" th:text="${product.name}"></h3>
+
+                        <p class="product-desc" th:text="${product.description}"></p>
+
+                        <div class="product-price-row">
+                            <div class="product-price">
+                                ₹<span th:text="${product.price}"></span>
+                            </div>
+                            <span class="product-view-btn">
+                                Details →
+                            </span>
+                        </div>
+                    </div>
+
                 </a>
 
-                <form th:action="@{/products/delete/{id}(id=${product.id})}"
-                      method="post"
-                      onsubmit="return confirm('Are you sure you want to delete this product?');">
+                <!-- Owner / Admin Action Buttons -->
+                <div class="product-actions-bar"
+                     th:if="${manageableProductIds != null and manageableProductIds.contains(product.id)}">
 
-                    <button class="delete-btn" type="submit">
-                        🗑 Delete
-                    </button>
+                    <a class="btn btn-secondary btn-sm"
+                       style="flex: 1;"
+                       th:href="@{/products/edit/{id}(id=${product.id})}">
+                        ✏️ Edit
+                    </a>
 
-                </form>
+                    <form th:action="@{/products/delete/{id}(id=${product.id})}"
+                          method="post"
+                          style="flex: 1; margin: 0;"
+                          onsubmit="return confirm('Are you sure you want to remove this garment from ReWear?');">
+
+                        <button class="btn btn-danger-outline btn-sm btn-block" type="submit">
+                            🗑 Delete
+                        </button>
+
+                    </form>
+
+                </div>
 
             </div>
 
         </div>
 
-        <!-- No products message -->
-        <div class="empty-message"
-             th:if="${#lists.isEmpty(products)}">
-
-            <h3>No products found.</h3>
-            <p>Try changing your search or filters.</p>
-
+        <!-- No Products Found Empty State -->
+        <div class="rw-empty-state" th:if="${#lists.isEmpty(products)}">
+            <div class="rw-empty-icon">🔍</div>
+            <h3 class="rw-empty-title">No garments match your filters</h3>
+            <p class="rw-empty-desc">We couldn't find any items matching your selected criteria. Try adjusting your keyword search or clearing your active filters.</p>
+            <a th:href="@{/products}" class="btn btn-primary">
+                View All Garments
+            </a>
         </div>
 
-    </div>
-
+    </main>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

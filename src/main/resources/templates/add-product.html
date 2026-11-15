@@ -1,117 +1,179 @@
-
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Product | ReWear</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List a Product | ReWear</title>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('rewear-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 30px;
+        .form-card {
+            background: #ffffff;
+            border: 1px solid var(--surface-border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+            margin: 30px auto;
         }
 
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-        }
-
-        h1 {
+        .form-header {
             text-align: center;
-            color: #263d32;
+            margin-bottom: 32px;
         }
 
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
+        .form-title {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-900);
         }
 
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
+        .form-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
             margin-top: 6px;
-            box-sizing: border-box;
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 25px;
-            background: #263d32;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
         }
 
-        button:hover {
-            background: #3d5c4c;
+        @media (max-width: 600px) {
+            .form-card {
+                padding: 24px 18px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <h1>Add a Product</h1>
+<div class="rw-page-wrap">
+    <main class="rw-container rw-container-narrow rw-section">
 
-    <form th:action="@{/products}" th:object="${product}" method="post">
+        <a class="btn btn-secondary btn-sm"
+           th:href="@{/products}"
+           style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;">
+            ← Back to Products
+        </a>
 
+        <div class="form-card">
+            <div class="form-header">
+                <span style="font-size: 12px; font-weight: 700; color: var(--accent-terracotta); letter-spacing: 2px; text-transform: uppercase;">
+                    Sustainable Resale
+                </span>
+                <h1 class="form-title">List a Pre-Loved Garment</h1>
+                <p class="form-subtitle">Share details about your clothing piece to connect with conscious buyers.</p>
+            </div>
 
-        <label>Product Name</label>
-        <input type="text" th:field="*{name}" placeholder="Enter product name" required>
+            <form th:action="@{/products}" th:object="${product}" method="post">
 
-        <label>Description</label>
-        <textarea rows="4" th:field="*{description}" placeholder="Describe your product" required></textarea>
+                <div class="form-group">
+                    <label class="form-label">Product Name / Title *</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{name}"
+                           placeholder="e.g. Vintage Oversized Denim Jacket"
+                           required>
+                    <span class="form-help">Include brand, garment type, and key styling detail.</span>
+                </div>
 
-        <label>Price (₹)</label>
-        <input type="number" step="0.01" min="0" th:field="*{price}" placeholder="Enter price" required>
+                <div class="form-group">
+                    <label class="form-label">Garment Description *</label>
+                    <textarea class="form-control"
+                              rows="4"
+                              th:field="*{description}"
+                              placeholder="Describe the fabric, fit, original purchase context, and any specific characteristics..."
+                              required></textarea>
+                </div>
 
-        <label>Size</label>
-        <select th:field="*{size}" required>
-            <option value="">Select size</option>
-            <option value="XS">XS</option>
-            <option value="S">S</option>
-            <option value="M">M</option>
-            <option value="L">L</option>
-            <option value="XL">XL</option>
-            <option value="XXL">XXL</option>
-        </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Listing Price (₹) *</label>
+                        <input type="number"
+                               step="0.01"
+                               min="0"
+                               class="form-control"
+                               th:field="*{price}"
+                               placeholder="e.g. 1299.00"
+                               required>
+                    </div>
 
-        <label>Category</label>
-        <select th:field="*{category}" required>
-            <option value="">Select category</option>
-            <option value="Men">Men</option>
-            <option value="Women">Women</option>
-            <option value="Kids">Kids</option>
-            <option value="Accessories">Accessories</option>
-        </select>
+                    <div class="form-group">
+                        <label class="form-label">Garment Size *</label>
+                        <select class="form-select" th:field="*{size}" required>
+                            <option value="">Select size</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+                </div>
 
-        <label>Condition</label>
-        <select th:field="*{condition}" required>
-            <option value="">Select condition</option>
-            <option value="NEW_WITH_TAGS">New with tags</option>
-            <option value="LIKE_NEW">Like new</option>
-            <option value="GOOD">Good</option>
-            <option value="FAIR">Fair</option>
-        </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Category *</label>
+                        <select class="form-select" th:field="*{category}" required>
+                            <option value="">Select category</option>
+                            <option value="Men">Men</option>
+                            <option value="Women">Women</option>
+                            <option value="Kids">Kids</option>
+                            <option value="Accessories">Accessories</option>
+                        </select>
+                    </div>
 
-        <label>Image URL</label>
-        <input type="url" th:field="*{imageUrl}" placeholder="Paste image URL">
+                    <div class="form-group">
+                        <label class="form-label">Condition *</label>
+                        <select class="form-select" th:field="*{condition}" required>
+                            <option value="">Select condition</option>
+                            <option value="NEW_WITH_TAGS">New with tags (Never worn)</option>
+                            <option value="LIKE_NEW">Like new (Flawless condition)</option>
+                            <option value="GOOD">Good (Light regular wear)</option>
+                            <option value="FAIR">Fair (Visible vintage character)</option>
+                        </select>
+                    </div>
+                </div>
 
-        <button type="submit">Add Product</button>
+                <div class="form-group">
+                    <label class="form-label">Photo Image URL</label>
+                    <input type="url"
+                           class="form-control"
+                           th:field="*{imageUrl}"
+                           placeholder="https://example.com/image.jpg">
+                    <span class="form-help">Paste a high-resolution direct image link of the actual garment.</span>
+                </div>
 
-    </form>
+                <div style="margin-top: 28px; display: flex; gap: 14px;">
+                    <button type="submit" class="btn btn-primary btn-lg" style="flex: 2;">
+                        ✓ Publish Listing
+                    </button>
+                    <a th:href="@{/products}" class="btn btn-secondary btn-lg" style="flex: 1;">
+                        Cancel
+                    </a>
+                </div>
 
+            </form>
+        </div>
+
+    </main>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>
