@@ -1,50 +1,157 @@
-# ♻️ ReWear – Second-Hand Clothing Marketplace
+# ♻️ ReWear – Sustainable Second-Hand Fashion Marketplace
 
-ReWear is a web-based second-hand clothing marketplace built using **Java, Spring Boot, MySQL, and Thymeleaf**. It provides a platform where users can browse and purchase pre-owned clothing while admins manage products and orders.
+\<p align="center">   \<strong>Give pre-loved fashion a new life.\</strong> \</p>
 
-## 🚀 Features
+\<p align="center">   \<a href="[https://rewear-black.vercel.app/](https://rewear-black.vercel.app/)">🌐 Live Website\</a> •   \<a href="[https://github.com/coder-mj957/rewear](https://github.com/coder-mj957/rewear)">💻 GitHub Repository\</a> \</p>
+
+---
+
+## 🌍 About the Project
+
+**ReWear** is a web-based second-hand clothing marketplace designed to promote sustainable fashion by making it easier for people to buy and sell pre-owned clothing.
+
+The platform provides a user-friendly shopping experience where customers can explore products, manage their shopping carts, place orders, and track their purchases. Administrators can manage products and monitor customer orders through an admin portal.
+
+## ✨ Features
+
+### 👤 User Features
 
 - User registration and login
-- Browse available clothing products
+- Browse and search clothing products
 - View detailed product information
-- Add products to shopping cart
-- Update product quantities and manage cart items
-- Place orders and receive order confirmation
-- View order history and order details
-- Admin dashboard for product and order management
-- Add, edit, and delete products
+- Add products to cart
+- Update product quantities and remove cart items
+- Buy products and place orders
+- View order confirmation and order history
+- View individual order details
+
+### 🔐 Admin Features
+
+- Admin portal and dashboard
+- Add new products
+- Edit existing products
+- Delete products
+- View and manage customer orders
+
+### 🎨 UI Features
+
+- Modern, responsive interface
+- Light and dark mode
+- Theme preference persistence
+- Clean and user-friendly navigation
 
 ## 🛠️ Technologies Used
 
-- **Backend:** Java, Spring Boot
-- **Frontend:** HTML, CSS, Thymeleaf
-- **Database:** MySQL
-- **Build Tool:** Maven
-- **IDE:** IntelliJ IDEA
+| Category        | Technology                  |
+| --------------- | --------------------------- |
+| Backend         | Java 21, Spring Boot        |
+| Frontend        | HTML, CSS, Thymeleaf        |
+| Database        | MySQL-compatible TiDB Cloud |
+| ORM             | Spring Data JPA, Hibernate  |
+| Build Tool      | Maven                       |
+| Deployment      | Vercel                      |
+| IDE             | IntelliJ IDEA               |
+| Version Control | Git and GitHub              |
 
-## ⚙️ How to Run the Project
+## 🚀 Live Demo
 
-1. Clone this repository:
+**Visit ReWear:** [https://rewear-black.vercel.app/](https://rewear-black.vercel.app/)
+
+The application is deployed and accessible online.
+
+## ⚙️ Run Locally
+
+### Prerequisites
+
+- Java JDK 21
+- IntelliJ IDEA (recommended)
+- MySQL or a compatible database
+- Git
+
+### Installation
+
+1. Clone the repository:
+
    ```bash
-  [ git clone YOUR_REPOSITORY_URL](https://github.com/coder-mj957/rewear.git)
+   git clone https://github.com/coder-mj957/rewear.git
    ```
+
 2. Open the project in IntelliJ IDEA.
-3. Create a MySQL database named `rewear_db`.
-4. Configure your database credentials in `application-local.properties`.
-5. Run the `RewearApplication.java` file.
-6. Open your browser and visit:
-   `http://localhost:8080`
 
-## 🔐 Database Configuration
+3. Create a database named:
 
-The application uses MySQL. Configure your local database username and password in `application-local.properties`.
+   ```sql
+   CREATE DATABASE rewear_db;
+   ```
 
-**Note:** Never upload your actual database password or other sensitive credentials to GitHub.
+4. Configure your database connection in `application-local.properties`:
+
+   ```properties
+   spring.datasource.url=jdbc:mysql://localhost:3306/rewear_db
+   spring.datasource.username=YOUR_USERNAME
+   spring.datasource.password=YOUR_PASSWORD
+   ```
+
+5. Run the application using `RewearApplication.java`, or use:
+
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+
+   On Windows:
+
+   ```powershell
+   .\mvnw.cmd spring-boot:run
+   ```
+
+6. Open your browser:
+
+   ```text
+   http://localhost:8080
+   ```
+
+## 🔒 Environment Configuration
+
+For deployment, configure the following environment variables in your hosting platform:
+
+- `DB_URL`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `PORT`
+
+**Important:** Never commit database passwords, private credentials, or other sensitive configuration files to GitHub.
+
+## 📁 Project Structure
+
+```text
+rewear/
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── Rewear/
+│       └── resources/
+│           ├── static/
+│           │   ├── css/
+│           │   └── js/
+│           ├── templates/
+│           └── application.properties
+├── pom.xml
+├── Dockerfile
+├── Dockerfile.vercel
+├── vercel.json
+└── README.md
+```
+
+## 🎯 Project Objective
+
+ReWear aims to encourage sustainable consumption by extending the life cycle of clothing and making second-hand fashion more accessible.
 
 ## 👨‍💻 Author
 
 **coder-mj957**
 
+GitHub: [https://github.com/coder-mj957](https://github.com/coder-mj957)
+
 ---
 
-⭐ If you find this project interesting, consider giving it a star!
+⭐ If you like this project, consider giving the repository a star!
