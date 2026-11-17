@@ -1,10 +1,10 @@
 # ♻️ ReWear – Sustainable Second-Hand Fashion Marketplace
 
-\<p align="center">   \<strong>Give pre-loved fashion a new life.\</strong> \</p>
+**Give pre-loved fashion a new life.**
 
-\<p align="center">   \<a href="[https://rewear-black.vercel.app/](https://rewear-black.vercel.app/)">🌐 Live Website\</a> •   \<a href="[https://github.com/coder-mj957/rewear](https://github.com/coder-mj957/rewear)">💻 GitHub Repository\</a> \</p>
+🌐 [Live Website](https://rewear-black.vercel.app/)
 
----
+💻 [GitHub Repository](https://github.com/coder-mj957/rewear)
 
 ## 🌍 About the Project
 
